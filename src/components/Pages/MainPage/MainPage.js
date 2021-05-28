@@ -16,18 +16,13 @@ class MainPage extends Component {
         fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&language=ko-KR`)
             .then(res => res.json())
             .then(data => {
-                let items = data.results;
-                //let jsonParam = Object.keys(items[0]);
-
-                for(let index = 0; index < items.length; index++) {
-                    movies[index] = items[index];
-                    movies[index].backdrop_path = `http://image.tmdb.org/t/p/original${items[index].backdrop_path}`;
-                    movies[index].poster_path = `http://image.tmdb.org/t/p/original${items[index].poster_path}`;
-                    movies[index].id = `/movie/${items[index].id}`;
+                for(let index = 0; index < data.results.length; index++) {
+                    data.results[index].poster_path = `http://image.tmdb.org/t/p/original${data.results[index].poster_path}`;
+                    data.results[index].id = `/movie/${data.results[index].id}`;
                 }
 
                 this.setState({
-                    items: movies,
+                    items: data.results,
                     isLoaded: true
                 })
                 console.log(movies);
