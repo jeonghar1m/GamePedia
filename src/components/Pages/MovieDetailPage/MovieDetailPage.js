@@ -18,38 +18,16 @@ class MovieDetailPage extends Component {
         const creditsInfo = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${api_key}`;
         const movieInfo = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=ko-KR`;
     
+        const movieLang = {"English": "영어", "한국어/조선말": "한국어", "Deutsch": "독일어", "Español": "스페인어", "日本語": "일본어", "普通话": "표준 중국어", "Français": "불어", "Nederlands": "네덜란드어"};
+
         fetch(movieInfo)
             .then(res => res.json())
             .then(data => {
                 data.poster_path = `http://image.tmdb.org/t/p/original${data.poster_path}`;
 
                 // 언어 data값 문자열 한국어로 번역
-                for(let index = 0; index < data.spoken_languages.length; index++) {
-                    if(data.spoken_languages[index].name === "English") {
-                        data.spoken_languages[index].name = "영어";
-                    }
-                    else if(data.spoken_languages[index].name === "한국어/조선말") {
-                        data.spoken_languages[index].name = "한국어";
-                    }
-                    else if(data.spoken_languages[index].name === "Deutsch") {
-                        data.spoken_languages[index].name = "독일어";
-                    }
-                    else if(data.spoken_languages[index].name === "Español") {
-                        data.spoken_languages[index].name = "스페인어";
-                    }
-                    else if(data.spoken_languages[index].name === "日本語") {
-                        data.spoken_languages[index].name = "일본어";
-                    }
-                    else if(data.spoken_languages[index].name === "普通话") {
-                        data.spoken_languages[index].name = "표준 중국어";
-                    }
-                    else if(data.spoken_languages[index].name === "Français") {
-                        data.spoken_languages[index].name = "불어";
-                    }
-                    else if(data.spoken_languages[index].name === "Nederlands") {
-                        data.spoken_languages[index].name = "네덜란드어";
-                    }
-                }
+                for(let index = 0; index < data.spoken_languages.length; index++)
+                    data.spoken_languages[index].name = movieLang[data.spoken_languages[index].name];
                 
                 console.log(data);
 
