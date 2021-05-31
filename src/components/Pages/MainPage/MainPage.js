@@ -5,13 +5,12 @@ class MainPage extends Component {
         super(props);
         this.state = {
             items: [],
-            isLoaded: false
+            mode: "Loading"
         }
     }
 
     async componentDidMount() {
         const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
-        let movies = [];
 
         fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&language=ko-KR`)
             .then(res => res.json())
@@ -23,29 +22,41 @@ class MainPage extends Component {
 
                 this.setState({
                     items: data.results,
-                    isLoaded: true
+                    mode: "Normal"
                 })
-                console.log(movies);
+                console.log(data.results);
+            })
+            .catch(err => {
+                this.setState({
+                    mode: "404"
+                })
             });
     }
 
     render() {
-        let {isLoaded, items} = this.state;
+        const {mode, items} = this.state;
 
-        if(!isLoaded) {
+        if(mode === "Loading") {
             return (
                 <section className="inner">
                     <h2>Loading...</h2>
                 </section>
             );
         }
+        if(mode === "404") {
+            return (
+                <section className="inner">
+                    <h2>404 Not Found.</h2>
+                </section>
+            ); 
+        }
         return (
-            <section class="inner">
+            <section className="inner">
                 <h2>영화 TOP 20</h2>
-                <div class="container">
-                    <div class="row">
+                <div className="container">
+                    <div className="row">
                         {items.map(item => (
-                            <div class="col col-xl-3 col-md-6 col-12"><a href={item.id}><img src={item.poster_path} width="100%" height="95%" alt=""></img></a></div>
+                            <div className="col col-xl-3 col-md-6 col-12" key={item.title}><a href={item.id}><img src={item.poster_path} width="100%" height="95%" alt={item.title}></img></a></div>
                         ))}
                     </div>
                 </div>
