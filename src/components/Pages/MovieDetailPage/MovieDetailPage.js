@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MovieInfo from './Sections/MovieInfo';
 import CreditsInfo from './Sections/CreditsInfo';
+import {siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl} from '../../Config';
 
 class MovieDetailPage extends Component {
     constructor(props) {
@@ -18,18 +19,15 @@ class MovieDetailPage extends Component {
 
         const movieId = this.props.match.params.movieId;
 
-        const creditsInfo = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${api_key}`;
-        const movieInfo = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=ko-KR`;
-    
-        const movieLang = {"English": "영어", "Korean": "한국어", "German": "독일어", "Spanish": "스페인어", "Japanese": "일본어", "Mandarin": "표준 중국어", "French": "불어", "Dutch": "네덜란드어", "Turkish": "터키어", "Finnish": "핀란드어", "Swedish": "스웨덴어", "Russian": "러시아어"};
-        const countriesLang = {"US": "미국", "KR": "대한민국", "JP": "일본", "BE": "벨기에", "NL": "네덜란드", "CN": "중국", "TW": "대만", "GB": "영국", "RU": "러시아", "ZA": "남아프리카공화국", "CA": "캐나다"};
+        const creditsInfo = `${movieApiBaseUrl}${movieId}/credits?api_key=${api_key}`;
+        const movieInfo = `${movieApiBaseUrl}${movieId}?api_key=${api_key}&language=ko-KR`;
 
         fetch(movieInfo)
             .then(res => res.json())
             .then(data => {
-                data.poster_path = `http://image.tmdb.org/t/p/original${data.poster_path}`;
+                data.poster_path = `${movieImageBaseUrl}original${data.poster_path}`;
 
-                document.title = `${data.title} - 마이무비리스트`;  // change the title
+                document.title = `${data.title} - ${siteTitle}`;  // change the title
 
                 // 언어 data값 문자열 한국어로 번역
                 for(let index = 0; index < data.spoken_languages.length; index++)
@@ -53,7 +51,13 @@ class MovieDetailPage extends Component {
 
         fetch(creditsInfo)
             .then(res => res.json())
-            .then(data => {                
+            .then(data => {
+                for(let index = 0; index < data.cast.length; index++)
+                    if(data.cast[index].profile_path !== null)
+                        data.cast[index].profile_path = `${movieImageBaseUrl}original${data.cast[index].profile_path}`;
+                    else
+                        data.cast[index].profile_path = 'https://i.imgur.com/v2uZO3u.jpg';
+
                 console.log(data);
 
                 this.setState({

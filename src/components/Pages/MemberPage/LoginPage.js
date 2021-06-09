@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import {siteTitle} from '../../Config';
 
 class LoginPage extends Component {
     componentDidMount() {
-        document.title="로그인 - 마이무비리스트";
+        document.title=`로그인 - ${siteTitle}`;
     }
 
     render() {

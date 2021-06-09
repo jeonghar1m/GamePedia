@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import {siteTitle} from '../../Config';
 
 class RegisterPage extends Component {
     componentDidMount() {
-        document.title="회원가입 - 마이무비리스트";
+        document.title=`회원가입 - ${siteTitle}`;
     }
     
     render() {

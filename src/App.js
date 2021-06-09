@@ -21,7 +21,6 @@ class App extends Component {
                 <span className="element"><a href="/register">회원가입</a></span>
               </div>
             </div>
-            <hr></hr>
           </nav>
         </header>
         <Route exact path="/" component={MainPage}></Route>

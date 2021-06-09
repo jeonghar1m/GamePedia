@@ -1,9 +1,11 @@
+header {position: fixed; top: 0; left:0; right: 0; background-color: white;}
 header #logo {float: left;}
 header #logo a, header #log a, .inner a {text-decoration: none; color: black;}
 header #log {float:right; margin: 1%;}
 header #log .element {float:left; margin-right:10px;}
+section {padding-top:75px;}
 nav > hr {width:100%;}
 .inner {margin: 0 15%;}
-section {padding-top: 30px;}
 table > tr > img {float: left;}
 #overview {margin: 3% 0; border:1px solid; padding: 10px;}
+.person_name {text-align: center;}
