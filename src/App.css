@@ -3,9 +3,10 @@ header #logo {float: left;}
 header #logo a, header #log a, .inner a {text-decoration: none; color: black;}
 header #log {float:right; margin: 1%;}
 header #log .element {float:left; margin-right:10px;}
+.App {background-color: #F9F9F9;}
 section {padding-top:75px;}
 nav > hr {width:100%;}
 .inner {margin: 0 15%;}
 table > tr > img {float: left;}
 #overview {margin: 3% 0; border:1px solid; padding: 10px;}
-.person_name {text-align: center;}
+.person_name, .movie_name {text-align: center;}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MainPage from './components/Pages/MainPage/MainPage';
+import MainPage from './components/Pages/LandingPage/LandingPage';
 import MovieDetailPage from './components/Pages/MovieDetailPage/MovieDetailPage';
 import MovieOverView from './components/Pages/MovieDetailPage/OverView/MovieOverView';
 import Login from './components/Pages/MemberPage/LoginPage';
