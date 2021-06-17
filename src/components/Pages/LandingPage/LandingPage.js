@@ -64,13 +64,6 @@ class MainPage extends Component {
             });
     }
 
-    loadMoreMovies(page) {
-        const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
-        const movieInfo = `${movieApiBaseUrl}popular?api_key=${api_key}&language=ko-KR&page=${page + 1}`;
-
-        this.fetchMovies(movieInfo);
-    }
-
     render() {
         const {mode, items} = this.state;
 

@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import {siteTitle} from '../../Config';
 
-class RegisterPage extends Component {
-    componentDidMount() {
+function RegisterPage() {
+    useEffect(() => {
         document.title=`회원가입 - ${siteTitle}`;
-    }
-    
-    render() {
-        return (
+    }, [])
+
+    return (
+        <div>
             <section className="inner">
                 <div>
                     <form method="post">
@@ -35,9 +35,8 @@ class RegisterPage extends Component {
                     </form>
                 </div>
             </section>
-        );
-    }
-
+        </div>
+    )
 }
 
-export default RegisterPage;
+export default RegisterPage

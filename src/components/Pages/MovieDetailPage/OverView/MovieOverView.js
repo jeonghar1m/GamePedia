@@ -1,20 +1,18 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl} from '../../../Config';
 
-class MovieOverView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            movieItems: [],
-            mode: "Loading"
-        }
-    }
+function MovieOverView(props) {
+    const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
 
-    async componentDidMount() {
-        const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
+    const movieId = props.match.params.movieId;
 
-        const movieId = this.props.match.params.movieId;
+    const [movieItems, setMovieItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const release_date = new Date(movieItems.release_date); // 개봉연도만 가져오기 위한 상수 선언
 
+    const preURL = `../${props.match.params.movieId}`;
+
+    useEffect(() => {
         fetch(`${movieApiBaseUrl}${movieId}?api_key=${api_key}&language=ko-KR`)
             .then(res => res.json())
             .then(data => {
@@ -31,40 +29,14 @@ class MovieOverView extends Component {
                 
                 console.log(data);
 
-                this.setState({
-                    movieItems: data,
-                    mode: "Normal"
-                })
+                setMovieItems(data);
+                setLoading(false);
             })
-            .catch(err => {
-                this.setState({
-                    mode: "404"
-                })
-            });
-    }
+    }, [api_key, movieId])
 
-    render () {
-        const {movieItems, mode} = this.state;
-
-        const release_date = new Date(movieItems.release_date); // 개봉연도만 가져오기 위한 상수 선언
-
-        const preURL = `../${this.props.match.params.movieId}`;
-
-        if(mode === "Loading") {
-            return (
-                <section className="inner">
-                    <h2>Loading...</h2>
-                </section>
-            );
-        }
-        else if(mode === "404") {
-            return (
-                <section className="inner">
-                    <h2>404 Not Found.</h2>
-                </section>
-            ); 
-        }
-        return (
+    return (
+        <div>
+            {!loading ?
             <section className="inner">
                 <div>
                     <p><a href={preURL}>[이전]</a></p>
@@ -89,8 +61,13 @@ class MovieOverView extends Component {
                     </div>
                 </div>
             </section>
-        );
-    }
+            :
+            <section className="inner">
+                <div>loading...</div>
+            </section>
+            }
+        </div>
+    )
 }
 
-export default MovieOverView;
+export default MovieOverView

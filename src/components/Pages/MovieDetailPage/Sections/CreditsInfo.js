@@ -15,7 +15,6 @@ function CreditsInfo(props) {
     
     return (
         <div>
-            {/* <div><b>감독: </b>{director.map((director, index) => (<span key={director.name}>{director.name}{index < director.length - 1 ? ',\u00A0' : ''}</span>))}</div> */}
             <p><b>감독</b></p>
             <div className="container">
                 <div className="row">
@@ -27,12 +26,6 @@ function CreditsInfo(props) {
                     ))}
                 </div>
             </div>
-
-            {/* <ul>
-                {director.map(director => (
-                    <li key="director">{director.name}</li>
-                ))}
-            </ul> */}
             <p><b>출연</b></p>
             <div className="container">
                 <div className="row">

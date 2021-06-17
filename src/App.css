@@ -3,7 +3,7 @@ header #logo {float: left;}
 header #logo a, header #log a, .inner a {text-decoration: none; color: black;}
 header #log {float:right; margin: 1%;}
 header #log .element {float:left; margin-right:10px;}
-.App {background-color: #F9F9F9;}
+html, .App{background-color: #F9F9F9;}
 section {padding-top:75px;}
 nav > hr {width:100%;}
 .inner {margin: 0 15%;}

@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import {siteTitle} from '../../Config';
 
-class LoginPage extends Component {
-    componentDidMount() {
+function LoginPage() {
+    useEffect(() => {
         document.title=`로그인 - ${siteTitle}`;
-    }
+    }, [])
 
-    render() {
-        return (
+    return (
+        <div>
             <section className="inner">
                 <div>
                     <form method="post">
@@ -28,15 +28,12 @@ class LoginPage extends Component {
                             </table>
                             <Button variant="secondary">확인</Button>
                             <Button variant="secondary">ID/PW 찾기</Button>
-                            {/* <input type="submit" value = "확인" />
-                            <input type="button" value="ID/PW 찾기"></input> */}
                         </fieldset>
                     </form>
                 </div>
             </section>
-        );
-    }
-
+        </div>
+    )
 }
 
-export default LoginPage;
+export default LoginPage
