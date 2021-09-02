@@ -1,88 +1,78 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {siteTitle, movieApiBaseUrl, movieImageBaseUrl} from '../../Config';
 
-class MainPage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            items: [],
-            mode: "Loading",
-            page: 1
-        }
-        this.infiniteScroll = this.infiniteScroll.bind(this);
-    }
+function LandingPage() {
+    const [items, setItems] = useState([]);
+    const [mode, setMode] = useState("Loading");
+    const [page, setPage] = useState(1);
+    const [isFetching, setIsFetching] = useState(true);
 
-    infiniteScroll() {
-        const {page} = this.state;
-        let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-        let scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
-        let clientHeight = document.documentElement.clientHeight;
-        if(scrollTop + clientHeight >= scrollHeight) {
-            this.setState({
-                page: page + 1
-            })
-            this.fetchMovies();
-        }
-    }
-
-    async componentDidMount() {
-        document.title = siteTitle;  // change the title
-
-        this.fetchMovies();
-
-        window.addEventListener('scroll', this.infiniteScroll, true);
-    }
-
-    async componentWillUnmount() {
-        window.removeEventListener('scroll', this.infiniteScroll, true);
-    }
-
-    fetchMovies() {
-        const {page, items} = this.state;
-        const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
+    const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
+ 
+    const fetchMovies = useCallback(() => {
         const movieInfo = `${movieApiBaseUrl}popular?api_key=${api_key}&language=ko-KR&page=${page}`;
-
-        fetch(movieInfo)
+        
+        if(isFetching) {
+            fetch(movieInfo)
             .then(res => res.json())
-            .then(data => {
-                for(let index = 0; index < data.results.length; index++) {
-                    data.results[index].poster_path = `${movieImageBaseUrl}original${data.results[index].poster_path}`;
-                    data.results[index].id = `/movie/${data.results[index].id}`;
+            .then(res => {
+                for(let index = 0; index < res.results.length; index++) {
+                    res.results[index].poster_path = `${movieImageBaseUrl}original${res.results[index].poster_path}`;
+                    res.results[index].id = `/movie/${res.results[index].id}`;
                 }
-
-                this.setState({
-                    items: [...items, ...data.results],
-                    mode: "Normal",
-                    page: data.page
-                })
-                console.log(data);
+                
+                setItems([...items, ...res.results]);
+                setMode("Normal");
+                setPage(res.page + 1);
+                setIsFetching(false);
             })
             .catch(err => {
-                this.setState({
-                    mode: "404"
-                })
+                setMode("404");
             });
-    }
-
-    render() {
-        const {mode, items} = this.state;
-
-        if(mode === "Loading") {
-            return (
-                <section className="inner">
-                    <h2>Loading...</h2>
-                </section>
-            );
         }
-        else if(mode === "404") {
-            return (
-                <section className="inner">
-                    <h2>404 Not Found.</h2>
-                </section>
-            ); 
-        }
+    }, [api_key, isFetching, items, page])
+   
+    const infiniteScroll = useCallback(() => {
+        const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        const scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+        const clientHeight = document.documentElement.clientHeight;
+        
+        if((scrollTop + clientHeight >= scrollHeight) && !isFetching)
+            setIsFetching(true);
+    }, [isFetching])
+    
+    useEffect(() => {
+        document.title = siteTitle;
+        if(isFetching)
+            fetchMovies();
+        window.addEventListener('scroll', infiniteScroll, true);
+
+        return () => {
+            window.removeEventListener('scroll', infiniteScroll, true);
+        };
+    }, [page, fetchMovies, infiniteScroll, isFetching])
+    
+    if(mode === "Loading") {
         return (
             <section className="inner">
+                <div>
+                    <h2>Loading...</h2>
+                </div>
+            </section>
+        )
+    }
+    else if(mode === "404") {
+        return (
+            <section className="inner">
+                <div>
+                    <h2>404 Not Found</h2>
+                </div>
+            </section>
+        )
+    }
+    return (
+        <section className="inner">
+            <div>
                 <h2>영화 TOP</h2>
                 <div className="container">
                     <div className="row">
@@ -94,10 +84,9 @@ class MainPage extends Component {
                         ))}
                     </div>
                 </div>
-            </section>
-        );
-    }
-
+            </div>
+        </section>
+    )
 }
 
-export default MainPage;
+export default LandingPage;

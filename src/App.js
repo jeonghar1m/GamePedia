@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MainPage from './components/Pages/LandingPage/LandingPage';
+import LandingPage from './components/Pages/LandingPage/LandingPage';
 import MovieDetailPage from './components/Pages/MovieDetailPage/MovieDetailPage';
 import MovieOverView from './components/Pages/MovieDetailPage/OverView/MovieOverView';
 import Login from './components/Pages/MemberPage/LoginPage';
@@ -22,7 +22,7 @@ function App() {
         </div>
       </nav>
     </header>
-    <Route exact path="/" component={MainPage}></Route>
+    <Route exact path="/" component={LandingPage}></Route>
     <Route exact path="/movie/:movieId" component={MovieDetailPage}></Route>
     <Route exact path="/movie/:movieId/overview" component={MovieOverView}></Route>
     <Route exact path="/login" component={Login}></Route>
