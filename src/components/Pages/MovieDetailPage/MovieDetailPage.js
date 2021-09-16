@@ -9,6 +9,7 @@ function MovieDetailPage(props) {
     const [creditsToggle, setCreditsToggle] = useState(false);
     const [isLoadingMovie, setIsLoadingMovie] = useState(true);
     const [isLoadingCredits, setIsLoadingCredits] = useState(true);
+    const [target, setTarget] = useState("_blank");
     const [mode, setMode] = useState("Loading");
     
     const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
@@ -19,8 +20,6 @@ function MovieDetailPage(props) {
     const movieInfo = `${movieApiBaseUrl}${movieId}?api_key=${api_key}&language=ko-KR`;
 
     const overviewURL = `${props.match.params.movieId}/overview`;
-    
-    let targetSetting = "_blank";
 
     useEffect(() => {
         fetchItems();     
@@ -76,7 +75,7 @@ function MovieDetailPage(props) {
     }
     
     if(movieItems.homepage === "")
-        targetSetting = "_self";
+        setTarget("_self");
     
     if(mode === "Loading") {
         return (
@@ -96,7 +95,7 @@ function MovieDetailPage(props) {
         <section className="inner">
             <div>
                 <div style={{width:'100%', display:'inline-block'}}>
-                    <a href={movieItems.homepage} target={targetSetting}><img src={movieItems.poster_path} style={{margin:'0%', float:'left'}} alt="" width="15%" /></a>
+                    <a href={movieItems.homepage} target={target}><img src={movieItems.poster_path} style={{margin:'0%', float:'left'}} alt="" width="15%" /></a>
                     <h2 style={{margin: '17% 0 0 0'}}>{movieItems.title}</h2>
                 </div>
                 <div id="overview">
