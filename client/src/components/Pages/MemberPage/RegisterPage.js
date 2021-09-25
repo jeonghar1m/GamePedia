@@ -21,11 +21,15 @@ function RegisterPage() {
                                         <td><input type="text" name="id" required /></td>
                                     </tr>
                                     <tr>
-                                        <td>Mail</td>
+                                        <td>닉네임</td>
+                                        <td><input type="text" name="nickname" required /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>이메일</td>
                                         <td><input type="text" name="mail" required /></td>
                                     </tr>
                                     <tr>
-                                        <td>PW</td>
+                                        <td>비밀번호</td>
                                         <td><input type="password" name="pw" required /></td>
                                     </tr>
                                 </tbody>

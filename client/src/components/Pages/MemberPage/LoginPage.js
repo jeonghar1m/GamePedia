@@ -21,13 +21,13 @@ function LoginPage() {
                                         <td><input type="text" name="id" required /></td>
                                     </tr>
                                     <tr>
-                                        <td>PW</td>
+                                        <td>비밀번호</td>
                                         <td><input type="password" name="pw" required /></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <Button variant="secondary">확인</Button>
-                            <Button variant="secondary">ID/PW 찾기</Button>
+                            <Button variant="secondary">ID/비밀번호 찾기</Button>
                         </fieldset>
                     </form>
                 </div>
