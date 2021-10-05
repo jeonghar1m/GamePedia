@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
+import { withRouter } from 'react-router';
 import {siteTitle, movieApiBaseUrl, movieImageBaseUrl} from '../../Config';
 
 function LandingPage() {
@@ -89,4 +90,4 @@ function LandingPage() {
     )
 }
 
-export default LandingPage;
+export default withRouter(LandingPage);

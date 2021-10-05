@@ -8,7 +8,7 @@ https://themoviedb.org (TMDB)
 
 ## 사용 프레임워크
 * Front-End: React
-* Back-End: Express (예정)
+* Back-End: Express
 
 ## 개발 기간
 2021.5.27 ~ 현재
