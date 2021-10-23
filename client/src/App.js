@@ -6,6 +6,7 @@ import MovieDetailPage from './components/Pages/MovieDetailPage/MovieDetailPage'
 import MovieOverView from './components/Pages/MovieDetailPage/OverView/MovieOverView';
 import Login from './components/Pages/MemberPage/LoginPage';
 import Register from './components/Pages/MemberPage/RegisterPage';
+import MyPage from './components/Pages/MemberPage/MyPage';
 import {Route} from 'react-router-dom';
 import Auth from './hoc/auth';
 import axios from 'axios';
@@ -36,6 +37,7 @@ function App(props) {
   ) : (
     <div>
       <span className="element"><a href="" onClick={logoutHandler}>로그아웃</a></span>
+      <span className="element"><a href="/mypage"><img src="/img/user_profile.png" width="30%" /></a></span>
     </div>
   )
 
@@ -56,6 +58,7 @@ function App(props) {
       <Route exact path="/movie/:movieId/overview" component={MovieOverView}></Route>
       <Route exact path="/login" component={Auth(Login, false)}></Route>
       <Route exact path="/register" component={Auth(Register, false)}></Route>
+      <Route exact path="/mypage" component={Auth(MyPage, true)}></Route>
     <footer>
       <hr></hr>
       &copy; 2021 MyMovieList

@@ -2,14 +2,7 @@ import React from 'react';
 import {movieImageBaseUrl} from '../../../Config';
 
 function CreditsInfo(props) {
-    const {credits} = props;
-    const director = credits.crew.filter(crew => (crew.job === "Director"));
-
-    for(let index = 0; index < director.length; index++)
-        if(director[index].profile_path !== null)
-            director[index].profile_path = `${movieImageBaseUrl}original${director[index].profile_path}`
-        else
-            director[index].profile_path = 'https://i.imgur.com/v2uZO3u.jpg';
+    const {credits, director} = props;
 
     console.log(director);
     

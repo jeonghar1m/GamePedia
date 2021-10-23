@@ -13,8 +13,6 @@ export default function(SpecificComponent, option = null, adminRoute = null) {
 
         useEffect(() => {
             dispatch(auth()).then(res => {
-                console.log(res);
-
                 // 로그인 하지 않은 상태
                 if(!res.payload.isAuth) {
                     if(option)  props.history.push('/login');

@@ -6,10 +6,10 @@ import {siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl}
 function MovieDetailPage(props) {
     const [movieItems, setMovieItems] = useState([]);
     const [creditsItems, setCreditsItems] = useState([]);
+    const [directorsItems, setDirectorsItems] = useState([])
     const [creditsToggle, setCreditsToggle] = useState(false);
     const [isLoadingMovie, setIsLoadingMovie] = useState(true);
     const [isLoadingCredits, setIsLoadingCredits] = useState(true);
-    const [target, setTarget] = useState("_blank");
     const [mode, setMode] = useState("Loading");
     
     const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
@@ -22,10 +22,10 @@ function MovieDetailPage(props) {
     const overviewURL = `${props.match.params.movieId}/overview`;
 
     useEffect(() => {
-        fetchItems();     
-    })
+        fetchItems();
+    }, []);
     
-    const fetchItems = () => {
+    const fetchItems = async () => {
         if(isLoadingMovie) {
             fetch(movieInfo)
                 .then(res => res.json())
@@ -40,8 +40,6 @@ function MovieDetailPage(props) {
                     
                     for(let index = 0; index < data.production_countries.length; index++)
                         data.production_countries[index].name = countriesLang[data.production_countries[index].iso_3166_1];
-                    
-                    console.log(data);
                     
                     setMovieItems(data);
                     setMode("Normal");
@@ -60,11 +58,18 @@ function MovieDetailPage(props) {
                         if(data.cast[index].profile_path !== null)
                             data.cast[index].profile_path = `${movieImageBaseUrl}original${data.cast[index].profile_path}`;
                         else
-                            data.cast[index].profile_path = 'https://i.imgur.com/v2uZO3u.jpg';
-            
-                    console.log(data);
+                            data.cast[index].profile_path = '/img/profile_image_unknown.jpg';
+
+                    const director = data.crew.filter(crew => (crew.job === "Director"));
+
+                    for(let index = 0; index < director.length; index++)
+                        if(director[index].profile_path !== null)
+                            director[index].profile_path = `${movieImageBaseUrl}original${director[index].profile_path}`
+                        else
+                            director[index].profile_path = '/img/profile_image_unknown.jpg';
                     
                     setCreditsItems(data);
+                    setDirectorsItems(director);
                     setCreditsToggle(true);
                     setIsLoadingCredits(false);
                 })
@@ -73,9 +78,12 @@ function MovieDetailPage(props) {
                 });
         }
     }
-    
-    if(movieItems.homepage === "")
-        setTarget("_self");
+
+    const movieWebsiteLinkRender = movieItems.homepage !== "" ? (
+        <a href={movieItems.homepage} target="_blank"><img src={movieItems.poster_path} style={{margin:'0%', float:'left'}} alt="" width="15%" /></a>
+    ) : (
+        <img src={movieItems.poster_path} style={{margin:'0%', float:'left'}} alt="" width="15%" />
+    )
     
     if(mode === "Loading") {
         return (
@@ -95,7 +103,7 @@ function MovieDetailPage(props) {
         <section className="inner">
             <div>
                 <div style={{width:'100%', display:'inline-block'}}>
-                    <a href={movieItems.homepage} target={target}><img src={movieItems.poster_path} style={{margin:'0%', float:'left'}} alt="" width="15%" /></a>
+                    {movieWebsiteLinkRender}
                     <h2 style={{margin: '17% 0 0 0'}}>{movieItems.title}</h2>
                 </div>
                 <div id="overview">
@@ -103,7 +111,7 @@ function MovieDetailPage(props) {
                     <MovieInfo movie={movieItems}/>
                     <hr />
                     {creditsToggle &&
-                        <CreditsInfo credits={creditsItems}/>
+                        <CreditsInfo credits={creditsItems} director={directorsItems} />
                     }
                 </div>
             </div>
