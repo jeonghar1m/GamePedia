@@ -15,7 +15,7 @@ import {useDispatch} from 'react-redux';
 
 function App(props) {
   const logoutHandler = () => axios.get('api/users/logout');
-  const [isLogin, setisLogin] = useState(false)
+  const [isLogin, setisLogin] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {

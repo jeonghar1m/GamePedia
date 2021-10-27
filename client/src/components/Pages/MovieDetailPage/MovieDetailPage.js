@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import MovieInfo from './Sections/MovieInfo';
 import CreditsInfo from './Sections/CreditsInfo';
+import Comment from './Sections/Comment';
 import {siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl} from '../../Config';
+import axios from 'axios';
 
 function MovieDetailPage(props) {
     const [movieItems, setMovieItems] = useState([]);
@@ -11,10 +13,12 @@ function MovieDetailPage(props) {
     const [isLoadingMovie, setIsLoadingMovie] = useState(true);
     const [isLoadingCredits, setIsLoadingCredits] = useState(true);
     const [mode, setMode] = useState("Loading");
+    const [Comments, setComments] = useState([]);
     
     const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
         
     const movieId = props.match.params.movieId;
+    const variable = {movieId: movieId}
     
     const creditsInfo = `${movieApiBaseUrl}${movieId}/credits?api_key=${api_key}`;
     const movieInfo = `${movieApiBaseUrl}${movieId}?api_key=${api_key}&language=ko-KR`;
@@ -23,7 +27,21 @@ function MovieDetailPage(props) {
 
     useEffect(() => {
         fetchItems();
+
+        axios.post('/api/comment/getComment', variable)
+        .then(res => {
+            if(res.data.success) {
+                console.log(res.data.comments);
+                setComments(res.data.comments);
+            } else {
+                alert('코멘트 정보를 가져오는데 실패했습니다.');
+            }
+        })
     }, []);
+
+    const refreshFunction = (newComment) => {
+        setComments(Comments.concat(newComment));
+    }
     
     const fetchItems = async () => {
         if(isLoadingMovie) {
@@ -114,6 +132,8 @@ function MovieDetailPage(props) {
                         <CreditsInfo credits={creditsItems} director={directorsItems} />
                     }
                 </div>
+                {/* Comments */}
+                <Comment refreshFunction={refreshFunction} commentLists={Comments} movieId={movieId} />
             </div>
         </section>
     );

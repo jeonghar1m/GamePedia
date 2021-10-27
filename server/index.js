@@ -9,6 +9,7 @@ const mongoId = process.env.DB_ID;
 const mongoPassword = process.env.DB_PW;
 
 const { User } = require("./models/User");
+const { Comment } = require("./models/Comments");
 const { auth } = require("./middleware/auth");
 
 const mongoose = require('mongoose');
@@ -35,7 +36,7 @@ app.post('/api/users/register', (req, res) => {
     if(err) return res.json({success: false, err});
     return res.status(200).json({success: true});
   });
-})
+});
 
 app.post('/api/users/login', (req, res) => {
   // 요청된 ID를 DB에 있는지 탐색
@@ -56,7 +57,7 @@ app.post('/api/users/login', (req, res) => {
     })
   })
 
-})
+});
 
 app.get('/api/users/auth', auth, (req, res) => {
   res.status(200).json({
@@ -68,7 +69,7 @@ app.get('/api/users/auth', auth, (req, res) => {
     email: req.user.email,
     role: req.user.role
   })
-})
+});
 
 app.get('/api/users/logout', auth, (req, res) => {
   User.findOneAndUpdate({_id: req.user._id}, 
@@ -79,7 +80,29 @@ app.get('/api/users/logout', auth, (req, res) => {
         success: true
       })
     })
-})
+});
+
+app.post('/api/comment/saveComment', (req, res) => {
+  const comment = new Comment(req.body);
+  comment.save((err, comment) => {
+    if(err) return res.json({success: false, err});
+    Comment.find({'_id': comment._id})
+    .populate('writer')
+    .exec((err, result) => {
+      if(err) return res.json({success: false, err});
+      res.status(200).json({success: true, result});
+    })
+  });
+});
+
+app.post('/api/comment/getComment', (req, res) => {
+  Comment.find({"movieId": req.body.movieId})
+  .populate('writer')
+  .exec((err, comments) => {
+    if(err) return res.status(400).send(err);
+    res.status(200).json({success: true, comments});
+  })
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

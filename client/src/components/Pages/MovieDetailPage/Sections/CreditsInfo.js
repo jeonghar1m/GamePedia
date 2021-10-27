@@ -1,5 +1,4 @@
 import React from 'react';
-import {movieImageBaseUrl} from '../../../Config';
 
 function CreditsInfo(props) {
     const {credits, director} = props;
