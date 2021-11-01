@@ -12,3 +12,5 @@ https://themoviedb.org (TMDB)
 
 ## 개발 기간
 2021.5.27 ~ 현재
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/db990cc9-3901-4f20-8855-aabe5420d6cf/deploy-status)](https://app.netlify.com/sites/harim-graduation-project/deploys)

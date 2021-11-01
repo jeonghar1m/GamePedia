@@ -2,8 +2,6 @@ import React from 'react';
 
 function CreditsInfo(props) {
     const {credits, director} = props;
-
-    console.log(director);
     
     return (
         <div>

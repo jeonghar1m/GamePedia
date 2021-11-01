@@ -2,26 +2,28 @@ import React, {useEffect, useState} from 'react';
 import MovieInfo from './Sections/MovieInfo';
 import CreditsInfo from './Sections/CreditsInfo';
 import Comment from './Sections/Comment';
-import {siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl} from '../../Config';
+import { siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl, api_key } from '../../Config';
 import axios from 'axios';
 
 function MovieDetailPage(props) {
     const [movieItems, setMovieItems] = useState([]);
     const [creditsItems, setCreditsItems] = useState([]);
-    const [directorsItems, setDirectorsItems] = useState([])
+    const [directorsItems, setDirectorsItems] = useState([]);
+    const [trailerItem, setTrailerItem] = useState("");
     const [creditsToggle, setCreditsToggle] = useState(false);
     const [isLoadingMovie, setIsLoadingMovie] = useState(true);
     const [isLoadingCredits, setIsLoadingCredits] = useState(true);
+    const [isLoadingTrailer, setIsLoadingTrailer] = useState(true);
+    const [isTrailerExist, setIsTrailerExist] = useState(true);
     const [mode, setMode] = useState("Loading");
     const [Comments, setComments] = useState([]);
-    
-    const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
         
     const movieId = props.match.params.movieId;
-    const variable = {movieId: movieId}
+    const variable = {movieId: movieId};
     
     const creditsInfo = `${movieApiBaseUrl}${movieId}/credits?api_key=${api_key}`;
     const movieInfo = `${movieApiBaseUrl}${movieId}?api_key=${api_key}&language=ko-KR`;
+    const trailerInfo = `${movieApiBaseUrl}${movieId}/videos?api_key=${api_key}&language=ko-KR`;
 
     const overviewURL = `${props.match.params.movieId}/overview`;
 
@@ -31,7 +33,6 @@ function MovieDetailPage(props) {
         axios.post('/api/comment/getComment', variable)
         .then(res => {
             if(res.data.success) {
-                console.log(res.data.comments);
                 setComments(res.data.comments);
             } else {
                 alert('코멘트 정보를 가져오는데 실패했습니다.');
@@ -95,6 +96,13 @@ function MovieDetailPage(props) {
                     setMode("404");
                 });
         }
+
+        if(isLoadingTrailer) {
+            fetch(trailerInfo)
+                .then(res => res.json())
+                .then(data => setTrailerItem(`https://www.youtube.com/embed/${data.results[0].key}`))
+                .catch(err => setIsTrailerExist(false))
+        }
     }
 
     const movieWebsiteLinkRender = movieItems.homepage !== "" ? (
@@ -124,6 +132,13 @@ function MovieDetailPage(props) {
                     {movieWebsiteLinkRender}
                     <h2 style={{margin: '17% 0 0 0'}}>{movieItems.title}</h2>
                 </div>
+                {/* Trailer */}
+                {isTrailerExist &&
+                    <div>
+                        <iframe width="560" height="315" src={trailerItem} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                }
+                {/* Trailer End */}
                 <div id="overview">
                     <span style={{float: 'right', margin: '0 1%'}}><a href={overviewURL}>자세히보기</a></span>
                     <MovieInfo movie={movieItems}/>

@@ -1,35 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Comment, Avatar, Button, Input } from 'antd';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Comment, Avatar, Button } from 'antd';
 import 'antd/dist/antd.css';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
-import { auth } from '../../../../_actions/user_action';
-
-const { TextArea } = Input;
 
 function SingleComment(props) {
     const user = useSelector(state => state.user);
-    const [isLogin, setisLogin] = useState(false);
-    const dispatch = useDispatch();
 
     const [OpenReply, setOpenReply] = useState(false);
     const [CommentValue, setCommentValue] = useState("");
 
-    useEffect(() => {
-        getIsLogin();
-    })
-
-    const getIsLogin = () => {
-        dispatch(auth()).then(res => {
-          if(res.payload.isAuth)  setisLogin(true);
-          else  setisLogin(false);
-        })
-    }
-
     const onClickReplyOpen = (event) => {
         event.preventDefault();
-        if(isLogin) setOpenReply(!OpenReply);
-        else    alert('로그인 한 사용자만 답글을 달 수 있습니다.');
+        setOpenReply(!OpenReply);
     }
 
     const onHandleChange = (event) => {
@@ -49,7 +32,6 @@ function SingleComment(props) {
         axios.post('/api/comment/saveComment', variables)
         .then(res => {
             if(res.data.success) {
-                console.log(res.data.result);
                 setCommentValue("");
                 setOpenReply(!OpenReply);
                 props.refreshFunction(res.data.result);
@@ -60,7 +42,7 @@ function SingleComment(props) {
     }
 
     let actions = [];
-    if(isLogin) {
+    if(props.isLogin) {
         actions = [
             <a href="" onClick={onClickReplyOpen} key="comment-basic-reply-to">답글 쓰기</a>
         ]
@@ -81,9 +63,8 @@ function SingleComment(props) {
                         onChange={onHandleChange}
                         value={CommentValue}
                         placeholder="코멘트를 작성하세요."
-                    >
+                    />
                     <br />
-                    </textarea>
                     <Button style={{width: '20%', height: '52px'}} onClick={onSubmit}>확인</Button>
                 </form>
             }

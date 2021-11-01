@@ -39,7 +39,7 @@ function Comment(props) {
         axios.post('/api/comment/saveComment', variables)
         .then(res => {
             if(res.data.success) {
-                console.log(res.data.result);
+                setcommentValue("");
                 props.refreshFunction(res.data.result);
             } else {
                 alert('코멘트를 저장하지 못했습니다.');
@@ -54,7 +54,7 @@ function Comment(props) {
             {props.commentLists && props.commentLists.map((comment, index) => (
                 (!comment.responseTo &&
                     <React.Fragment>
-                        <SingleComment refreshFunction={props.refreshFunction} comment={comment} movieId={movieId} />
+                        <SingleComment refreshFunction={props.refreshFunction} comment={comment} movieId={movieId} isLogin={isLogin} />
                         <ReplyComment refreshFunction={props.refreshFunction} parantCommentId={comment._id} movieId={movieId} commentLists={props.commentLists} />
                     </React.Fragment>
                 )

@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl} from '../../../Config';
+import { siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl, api_key } from '../../../Config';
 
 function MovieOverView(props) {
-    const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
-
     const movieId = props.match.params.movieId;
 
     const [movieItems, setMovieItems] = useState([]);

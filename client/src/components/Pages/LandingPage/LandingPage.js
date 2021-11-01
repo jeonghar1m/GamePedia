@@ -1,14 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import { withRouter } from 'react-router';
-import {siteTitle, movieApiBaseUrl, movieImageBaseUrl} from '../../Config';
+import { siteTitle, movieApiBaseUrl, movieImageBaseUrl, api_key } from '../../Config';
 
 function LandingPage() {
     const [items, setItems] = useState([]);
     const [mode, setMode] = useState("Loading");
     const [page, setPage] = useState(1);
     const [isFetching, setIsFetching] = useState(true);
-
-    const api_key = process.env.REACT_APP_MOVIEDB_API_KEY;
  
     const fetchMovies = useCallback(() => {
         const movieInfo = `${movieApiBaseUrl}popular?api_key=${api_key}&language=ko-KR&page=${page}`;

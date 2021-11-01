@@ -3,3 +3,4 @@ export const movieLang = {"English": "영어", "Korean": "한국어", "German": 
 export const countriesLang = {"US": "미국", "KR": "대한민국", "JP": "일본", "BE": "벨기에", "NL": "네덜란드", "CN": "중국", "TW": "대만", "GB": "영국", "RU": "러시아", "ZA": "남아프리카공화국", "CA": "캐나다", "FR": "프랑스", "MA": "모로코", "KE": "케냐"};
 export const movieApiBaseUrl = 'https://api.themoviedb.org/3/movie/';
 export const movieImageBaseUrl = 'http://image.tmdb.org/t/p/';
+export const api_key = 'a147cdb0b602da72aeb0b0c24935fb91';

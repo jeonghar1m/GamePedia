@@ -1,12 +1,9 @@
 require('dotenv').config();
-const express = require('express')
-const app = express()
-const port = 5001
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 5001;
 
 const cookieParser = require('cookie-parser');
-
-const mongoId = process.env.DB_ID;
-const mongoPassword = process.env.DB_PW;
 
 const { User } = require("./models/User");
 const { Comment } = require("./models/Comments");
@@ -15,7 +12,9 @@ const { auth } = require("./middleware/auth");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-mongoose.connect(`mongodb+srv://${mongoId}:${mongoPassword}@mymovielist.nmowq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
+const config = require('./config/key');
+
+mongoose.connect(config.mongoURI)
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.log(err))
 

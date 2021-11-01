@@ -7,11 +7,15 @@ import MovieOverView from './components/Pages/MovieDetailPage/OverView/MovieOver
 import Login from './components/Pages/MemberPage/LoginPage';
 import Register from './components/Pages/MemberPage/RegisterPage';
 import MyPage from './components/Pages/MemberPage/MyPage';
+import SearchPage from './components/Pages/SearchPage/SearchPage';
+import SearchResultsPage from './components/Pages/SearchPage/Results/SearchResults';
 import {Route} from 'react-router-dom';
 import Auth from './hoc/auth';
 import axios from 'axios';
 import {auth} from './_actions/user_action';
 import {useDispatch} from 'react-redux';
+import { BsSearch } from "react-icons/bs";
+import { AiOutlineUser } from "react-icons/ai";
 
 function App(props) {
   const logoutHandler = () => axios.get('api/users/logout');
@@ -30,15 +34,15 @@ function App(props) {
   }
 
   const menuRender = !isLogin ? (
-    <div>
+    <span>
       <span className="element"><a href="/login">로그인</a></span>
       <span className="element"><a href="/register">회원가입</a></span>
-    </div>
+    </span>
   ) : (
-    <div>
+    <span>
       <span className="element"><a href="" onClick={logoutHandler}>로그아웃</a></span>
-      <span className="element"><a href="/mypage"><img src="/img/user_profile.png" width="30%" /></a></span>
-    </div>
+      <span className="element"><a href="/mypage"><AiOutlineUser /></a></span>
+    </span>
   )
 
   return (
@@ -47,7 +51,10 @@ function App(props) {
       <nav>
         <div className="inner">
           <span id="logo"><h1><a href="/">MyMovieList</a></h1></span>
+          <div id="menu">
+          </div>
           <div id="log">
+            <a href="/search"><BsSearch /></a>
             {menuRender}
           </div>
         </div>
@@ -56,6 +63,8 @@ function App(props) {
       <Route exact path="/" component={LandingPage}></Route>
       <Route exact path="/movie/:movieId" component={MovieDetailPage}></Route>
       <Route exact path="/movie/:movieId/overview" component={MovieOverView}></Route>
+      <Route exact path="/search" component={SearchPage}></Route>
+      <Route exact path="/search/:searchKeyword" component={SearchResultsPage}></Route>
       <Route exact path="/login" component={Auth(Login, false)}></Route>
       <Route exact path="/register" component={Auth(Register, false)}></Route>
       <Route exact path="/mypage" component={Auth(MyPage, true)}></Route>
