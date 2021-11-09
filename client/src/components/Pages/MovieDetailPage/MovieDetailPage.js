@@ -2,11 +2,15 @@ import React, {useEffect, useState} from 'react';
 import MovieInfo from './Sections/MovieInfo';
 import CreditsInfo from './Sections/CreditsInfo';
 import Comment from './Sections/Comment';
+import TheMovieDBComment from './Sections/TheMovieDBComment';
 import { siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl, api_key } from '../../Config';
 import axios from 'axios';
+import { Modal, Button } from 'antd';
+import SimilarInfo from './Sections/SimilarInfo';
 
 function MovieDetailPage(props) {
     const [movieItems, setMovieItems] = useState([]);
+    const [similarItems, setSimilarItems] = useState([]);
     const [creditsItems, setCreditsItems] = useState([]);
     const [directorsItems, setDirectorsItems] = useState([]);
     const [trailerItem, setTrailerItem] = useState("");
@@ -14,15 +18,21 @@ function MovieDetailPage(props) {
     const [isLoadingMovie, setIsLoadingMovie] = useState(true);
     const [isLoadingCredits, setIsLoadingCredits] = useState(true);
     const [isLoadingTrailer, setIsLoadingTrailer] = useState(true);
+    const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+    const [isLoadingSimilar, setIsLoadingSimilar] = useState(true);
     const [isTrailerExist, setIsTrailerExist] = useState(true);
     const [mode, setMode] = useState("Loading");
     const [Comments, setComments] = useState([]);
+    const [TheMovieDBReviews, setTheMovieDBReviews] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
         
     const movieId = props.match.params.movieId;
     const variable = {movieId: movieId};
     
-    const creditsInfo = `${movieApiBaseUrl}${movieId}/credits?api_key=${api_key}`;
     const movieInfo = `${movieApiBaseUrl}${movieId}?api_key=${api_key}&language=ko-KR`;
+    const similarInfo = `${movieApiBaseUrl}${movieId}/similar?api_key=${api_key}&language=ko-KR`;
+    const creditsInfo = `${movieApiBaseUrl}${movieId}/credits?api_key=${api_key}`;
+    const theMovieDBReviewsData = `${movieApiBaseUrl}${movieId}/reviews?api_key=${api_key}`;
     const trailerInfo = `${movieApiBaseUrl}${movieId}/videos?api_key=${api_key}&language=ko-KR`;
 
     const overviewURL = `${props.match.params.movieId}/overview`;
@@ -92,9 +102,28 @@ function MovieDetailPage(props) {
                     setCreditsToggle(true);
                     setIsLoadingCredits(false);
                 })
-                .catch(err => {
-                    setMode("404");
-                });
+                .catch(err => setMode("404"));
+        }
+
+        if(isLoadingSimilar) {
+            fetch(similarInfo)
+                .then(res => res.json())
+                .then(data => {
+                    setSimilarItems(data.results);
+                    setIsLoadingSimilar(false);
+                    console.log(data);
+                })
+                .catch(err => setMode("404"))
+        }
+
+        if(isLoadingReviews) {
+            fetch(theMovieDBReviewsData)
+                .then(res => res.json())
+                .then(data => {
+                    setTheMovieDBReviews(data.results);
+                    setIsLoadingReviews(false);
+                })
+                .catch(err => setMode("404"))
         }
 
         if(isLoadingTrailer) {
@@ -134,9 +163,23 @@ function MovieDetailPage(props) {
                 </div>
                 {/* Trailer */}
                 {isTrailerExist &&
-                    <div>
-                        <iframe width="560" height="315" src={trailerItem} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
+                    <>
+                        <Button style={{float: 'right'}} type="seconday" onClick={() => {
+                            setIsModalVisible(true);
+                        }}>
+                            트레일러
+                        </Button>
+                        <Modal title="영화 트레일러"
+                            visible={isModalVisible}
+                            width={600}
+                            onCancel={() => {
+                                setIsModalVisible(false);
+                            }}
+                            footer={null}
+                            >
+                            <iframe width="560" height="315" src={trailerItem} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </Modal>
+                    </>
                 }
                 {/* Trailer End */}
                 <div id="overview">
@@ -147,7 +190,18 @@ function MovieDetailPage(props) {
                         <CreditsInfo credits={creditsItems} director={directorsItems} />
                     }
                 </div>
+                {/* Similar Movie */}
+                <div style={{margin: '0 0 10% 0'}}>
+                    <SimilarInfo items={similarItems} />
+                </div>
+                {/* Similar Movie End */}
                 {/* Comments */}
+                {(TheMovieDBReviews.length > 0) &&
+                    <p><h4>TheMovieDB 리뷰</h4></p>
+                }
+                {TheMovieDBReviews && TheMovieDBReviews.map(item => (
+                    <TheMovieDBComment review={item} />
+                ))}
                 <Comment refreshFunction={refreshFunction} commentLists={Comments} movieId={movieId} />
             </div>
         </section>

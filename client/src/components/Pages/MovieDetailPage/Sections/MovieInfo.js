@@ -10,7 +10,7 @@ function MovieInfo(props) {
             <p><b>기본 정보</b></p>
             <div>{release_date.getFullYear()} · {movie.production_countries[0].name} · {movie.genres[0].name}</div>
             <div>{movie.runtime}분</div>
-            <p style={{margin: '1% 0'}}>{movie.overview}</p>
+            <p style={{margin: '1% 0'}}>{movie.overview.slice(0, 100)}...</p>
         </div>
     )
 }

@@ -10,7 +10,7 @@ function CreditsInfo(props) {
                 <div className="row">
                     {director.map(director => (
                         <div className="col col-xl-3 col-md-6 col-12" key={director.name}>
-                            <div><img src={director.profile_path} width="100%" height="95%" alt={director.profile_path}></img></div>
+                            <div><a href={`../credit/${director.id}`}><img src={director.profile_path} width="100%" height="320px" alt={director.profile_path} /></a></div>
                             <div className="person_name">{director.name}</div>
                         </div>
                     ))}
@@ -21,7 +21,7 @@ function CreditsInfo(props) {
                 <div className="row">
                     {credits.cast.map(cast => (
                         <div className="col col-xl-3 col-md-6 col-12" key={cast.name}>
-                            <div><img src={cast.profile_path} width="100%" height="95%" alt={cast.profile_path}></img></div>
+                            <div><a href={`../credit/${cast.id}`}><img src={cast.profile_path} width="100%" height="320px" alt={cast.profile_path} /></a></div>
                             <div className="person_name">{cast.name} - {cast.character} 역</div>
                         </div>
                     ))}

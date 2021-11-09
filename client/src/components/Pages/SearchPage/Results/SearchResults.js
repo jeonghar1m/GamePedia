@@ -50,12 +50,11 @@ function SearchResults(props) {
                         <h2>검색 결과</h2>
                         {Items.map(item => (
                             <div className="col col-xl-3 col-md-6 col-12" key={item.title}>
-                                <div><a href={item.id}><img src={item.poster_path} width="100%" height="95%" alt={item.title}></img></a></div>
+                                <div><a href={item.id}><img src={item.poster_path} width="100%" height="320px" alt={item.title}></img></a></div>
                                 <div className="movie_name">{item.title}</div>
                             </div>
                         ))}
                     </div>
-
                 </div>
             </section>
         </div>
