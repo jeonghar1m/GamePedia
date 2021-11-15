@@ -52,7 +52,7 @@ function MovieOverView(props) {
                         <hr />
                         <b>상영언어</b> {movieItems.spoken_languages.map((lang, index) => (<span key={lang.name}>{lang.name}{(index < movieItems.spoken_languages.length -1)? ',\u00A0' : ''}</span>))}
                         <hr />
-                        <b>IMDB 평점</b> {movieItems.vote_average}
+                        <b>TheMovieDB 평점</b> {movieItems.vote_average}
                         <hr />
                         <b>내용</b><br />
                         {movieItems.overview}
