@@ -20,8 +20,8 @@ function ReplyComment(props) {
             <React.Fragment>
                 {comment.responseTo === parantCommentId && 
                     <div style={{ width: '80%', marginLeft: '40px' }}>
-                        <SingleComment refreshFunction={props.refreshFunction} comment={comment} movieId={props.movieId} />
-                        <ReplyComment refreshFunction={props.refreshFunction} commentLists={props.commentLists} movieId={props.movieId} parantCommentId={comment._id} />
+                        <SingleComment refreshFunction={props.refreshFunction} comment={comment} movieId={props.movieId} isLogin={props.isLogin} />
+                        <ReplyComment refreshFunction={props.refreshFunction} commentLists={props.commentLists} movieId={props.movieId} isLogin={props.isLogin} parantCommentId={comment._id} />
                     </div>
                 }
             </React.Fragment>

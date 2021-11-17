@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import Button from 'react-bootstrap/Button';
 import {siteTitle} from '../../Config';
 import {useDispatch} from 'react-redux';
-import {loginUser} from '../../../_actions/user_action';
+import { loginUser } from '../../../_actions/user_action';
 import { withRouter } from 'react-router-dom';
+import './MemberPage.css';
 
 function LoginPage() {
     useEffect(() => {
@@ -31,36 +31,60 @@ function LoginPage() {
 
         dispatch(loginUser(body))
             .then(res => {
-                if(res.payload.loginSuccess) window.location.replace('/');
-                else    alert('ID 혹은 비밀번호가 맞지 않습니다.');
+                if(res.payload.loginSuccess) {
+                    window.localStorage.setItem('userId', res.payload.userId);
+                    window.location.replace('/');
+                } else    alert('ID 혹은 비밀번호가 맞지 않습니다.');
             })
     }
 
     return (
-        <div>
-            <section className="inner">
-                <div>
-                    <form method="post" onSubmit={onSubmitHandler}>
-                        <fieldset>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>ID</td>
-                                        <td><input type="text" name="id" value={Id} onChange={onIdHandler} required /></td>
-                                    </tr>
-                                    <tr>
-                                        <td>비밀번호</td>
-                                        <td><input type="password" name="pw" value={Password} onChange={onPasswordHandler} required /></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <Button variant="secondary" type="submit">로그인</Button>
-                            {/* <Button variant="secondary">ID/비밀번호 찾기</Button> */}
-                        </fieldset>
-                    </form>
+      <div>
+        <section id="member-page">
+          <div id="main-content" style={{margin: '14% 0'}}>
+            <div id="content-name">로그인</div>
+            <form method="post" onSubmit={onSubmitHandler}>
+              <div className="input-area">
+                <div className="element label">
+                  <label htmlFor="Id_field">ID</label>
                 </div>
-            </section>
-        </div>
+                <div className="element">
+                  <input
+                    type="text"
+                    value={Id}
+                    onChange={onIdHandler}
+                    name="id"
+                    id="Id_field"
+                    required
+                  ></input>
+                </div>
+              </div>
+              <div className="input-area">
+                <div className="element label">
+                  <label htmlFor="password_field">비밀번호</label>
+                </div>
+                <div className="element">
+                  <input
+                    type="password"
+                    value={Password}
+                    onChange={onPasswordHandler}
+                    name="password"
+                    id="password_field"
+                    required
+                  ></input>
+                </div>
+              </div>
+              <div id="button-area">
+                <span>
+                  <button className="login" type="submit">
+                    로그인
+                  </button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
     )
 }
 

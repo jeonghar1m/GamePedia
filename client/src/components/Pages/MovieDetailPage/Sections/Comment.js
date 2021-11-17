@@ -1,27 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import SingleComment from './SingleComment';
 import ReplyComment from './ReplyComment';
-import { auth } from '../../../../_actions/user_action';
 
 function Comment(props) {
     const user = useSelector(state => state.user);
-    const movieId = props.movieId;
     const [commentValue, setcommentValue] = useState("");
-    const [isLogin, setisLogin] = useState(false);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        getIsLogin();
-    })
     
-    const getIsLogin = () => {
-        dispatch(auth()).then(res => {
-          if(res.payload.isAuth)  setisLogin(true);
-          else  setisLogin(false);
-        })
-    }
+    const { movieId } = props;
+    const { isLogin } = props;
+
+    const timestamp = new Date().getTime();
 
     const handleClick = (event) => {
         setcommentValue(event.currentTarget.value);
@@ -33,7 +23,8 @@ function Comment(props) {
         const variables = {
             content: commentValue,
             writer: user.userData._id,
-            movieId: movieId
+            movieId: movieId,
+            commentId: `${movieId}+${timestamp}`
         }
 
         axios.post('/api/comment/saveComment', variables)
@@ -55,7 +46,7 @@ function Comment(props) {
                 (!comment.responseTo &&
                     <React.Fragment>
                         <SingleComment refreshFunction={props.refreshFunction} comment={comment} movieId={movieId} isLogin={isLogin} />
-                        <ReplyComment refreshFunction={props.refreshFunction} parantCommentId={comment._id} movieId={movieId} commentLists={props.commentLists} />
+                        <ReplyComment refreshFunction={props.refreshFunction} parantCommentId={comment._id} movieId={movieId} isLogin={isLogin} commentLists={props.commentLists} />
                     </React.Fragment>
                 )
             ))}

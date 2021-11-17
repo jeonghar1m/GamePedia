@@ -1,0 +1,114 @@
+section#member-page {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+section > #main-content {
+    position: relative;
+}
+
+section > #main-content > #content-name {
+    color: #000000;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 34px;
+    letter-spacing: 1px;
+}
+
+section > #main-content > #social-login-name {
+    color: gray;
+    margin-top: 30px;
+    margin-bottom: 5px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.3);
+    font-size: 0.7em;
+}
+  
+#main-content input {
+    background-color: #EFF0F6;  
+    outline: none;
+    border: 3px solid transparent;
+    border-radius: 16px;
+    width: 326px;
+    height: 64px;
+    padding: 10px 20px;
+    padding-top: 20px;
+    font-size: 1.125em;
+    color: #14142B;
+    font-family: 'Poppins', 'Noto Sans KR' , sans-serif;
+    transition: background-color 0.3s;
+}
+
+#main-content input:focus{
+    background-color: #ffffff;
+    border: 3px solid #000000;
+}
+
+#main-content table {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+
+#main-content button {
+    background-color: #ffffff;
+    border-radius: 16px;
+    height: 65px;
+    color: #000000;
+    border: 3px solid #000000;
+    font-family: 'Poppins', 'Noto Sans KR' , sans-serif;
+    font-weight: 700;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+
+#main-content button:hover{
+    background-color: #000000;
+    color: #ffffff;
+}
+  
+#main-content button:active {
+    transform: scale(0.85);
+}
+
+#main-content button.login {
+    width: 150px;
+}
+
+#main-content button.signup {
+    width: 150px;
+}
+
+#main-content .element {
+    flex-direction: column;
+}
+
+#main-content .label {
+    text-align: left;
+    font-size: 0.875em;
+    color: #6E7191;
+}
+
+#main-content .label > label{
+    position: absolute;
+    top: 5px;
+    left: 23px;
+}
+  
+#main-content .input-area {
+    margin-top: 30px;
+    position: relative;
+}
+  
+#button-area {
+    margin-top: 30px;
+} 
+  
+#main-content input::placeholder{
+    font-size: 0.75em;
+}

@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 
 const { User } = require("./models/User");
 const { Comment } = require("./models/Comments");
+const { Favorite } = require("./models/Favorite");
 const { auth } = require("./middleware/auth");
 
 const mongoose = require('mongoose');
@@ -94,6 +95,14 @@ app.post('/api/comment/saveComment', (req, res) => {
   });
 });
 
+app.post('/api/comment/removeComment', (req, res) => {
+  Comment.findOneAndDelete({ commentId: req.body.commentId })
+    .exec((err, result) => {
+      if(err) return res.status(400).send(err);
+      return res.status(200).json({ success: true, result });
+    })
+});
+
 app.post('/api/comment/getComment', (req, res) => {
   Comment.find({"movieId": req.body.movieId})
   .populate('writer')
@@ -102,6 +111,53 @@ app.post('/api/comment/getComment', (req, res) => {
     res.status(200).json({success: true, comments});
   })
 });
+
+app.post('/api/favorite/favoriteNumber', (req, res) => {  
+  // mongoDB에서 Favorite 숫자 가져오기
+  Favorite.find({ "movieId": req.body.movieId})
+  .exec((err, info) => {
+    if(err) return res.status(400).send(err);
+    res.status(200).json({ success: true, favoriteNumber: info.length });
+  })
+})
+
+app.post('/api/favorite/favorited', (req, res) => {
+  // mongoDB에서 Favorite 숫자 가져오기
+  Favorite.find({ "movieId": req.body.movieId, "userFrom": req.body.userFrom })
+    .exec((err, info) => {
+      if(err) return res.status(400).send(err);
+      let result = false;
+      if(info.length !== 0) {
+        result = true;
+      }
+      res.status(200).json({ success: true, favorited: result });
+    })
+})
+
+app.post('/api/favorite/removeFromFavorite', (req, res) => {
+  Favorite.findOneAndDelete({ movieId: req.body.movieId, userFrom: req.body.userFrom })
+    .exec((err, doc) => {
+      if(err) return res.status(400).send(err);
+      return res.status(200).json({ success: true, doc });
+    })
+})
+
+app.post('/api/favorite/addToFavorite', (req, res) => {
+  const favorite = new Favorite(req.body);
+
+  favorite.save((err, doc) => {
+    if(err) return res.status(400).send(err);
+    return res.status(200).json({ success: true });
+  });
+})
+
+app.post('/api/favorite/getFavoritedMovie', (req, res) => {
+  Favorite.find({ 'userFrom': req.body.userFrom })
+    .exec((err, favorites) => {
+      if(err) return res.status(400).send(err);
+      return res.status(200).json({ success: true, favorites });
+    })
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

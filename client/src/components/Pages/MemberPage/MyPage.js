@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {siteTitle} from '../../Config';
+import React, { useEffect, useState } from 'react';
+import { siteTitle } from '../../Config';
 import { withRouter } from 'react-router-dom';
-import {auth} from '../../../_actions/user_action';
-import {useDispatch} from 'react-redux';
+import { auth } from '../../../_actions/user_action';
+import { useDispatch } from 'react-redux';
 import Gravatar from 'react-gravatar';
+import Favorite from './Sections/Favorite';
 
 function MyPage() {
     useEffect(() => {
@@ -22,6 +23,7 @@ function MyPage() {
         <div>
             <section className="inner center">
                 <div><Gravatar email={Email} size={100} /><h1>{Nickname}</h1></div>
+                <Favorite />
             </section>
         </div>
     )

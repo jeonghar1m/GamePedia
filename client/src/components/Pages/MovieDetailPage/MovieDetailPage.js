@@ -3,10 +3,13 @@ import MovieInfo from './Sections/MovieInfo';
 import CreditsInfo from './Sections/CreditsInfo';
 import Comment from './Sections/Comment';
 import TheMovieDBComment from './Sections/TheMovieDBComment';
+import Favorite from './Sections/Favorite';
 import { siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl, api_key } from '../../Config';
 import axios from 'axios';
 import { Modal, Button } from 'antd';
 import SimilarInfo from './Sections/SimilarInfo';
+import { auth } from '../../../_actions/user_action';
+import { useDispatch } from 'react-redux';
 
 function MovieDetailPage(props) {
     const [movieItems, setMovieItems] = useState([]);
@@ -25,6 +28,7 @@ function MovieDetailPage(props) {
     const [Comments, setComments] = useState([]);
     const [TheMovieDBReviews, setTheMovieDBReviews] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
         
     const movieId = props.match.params.movieId;
     const variable = {movieId: movieId};
@@ -36,19 +40,31 @@ function MovieDetailPage(props) {
     const trailerInfo = `${movieApiBaseUrl}${movieId}/videos?api_key=${api_key}&language=ko-KR`;
 
     const overviewURL = `${props.match.params.movieId}/overview`;
+    
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetchItems();
+        getIsLogin();
 
         axios.post('/api/comment/getComment', variable)
         .then(res => {
             if(res.data.success) {
+                console.log(res.data.comments);
                 setComments(res.data.comments);
             } else {
                 alert('코멘트 정보를 가져오는데 실패했습니다.');
             }
         })
     }, []);
+
+
+    const getIsLogin = () => {
+        dispatch(auth()).then(res => {
+          if(res.payload.isAuth)  setIsLogin(true);
+          else  setIsLogin(false);
+        })
+    }
 
     const refreshFunction = (newComment) => {
         setComments(Comments.concat(newComment));
@@ -111,7 +127,6 @@ function MovieDetailPage(props) {
                 .then(data => {
                     setSimilarItems(data.results);
                     setIsLoadingSimilar(false);
-                    console.log(data);
                 })
                 .catch(err => setMode("404"))
         }
@@ -182,6 +197,9 @@ function MovieDetailPage(props) {
                     </>
                 }
                 {/* Trailer End */}
+                {/* Favorite Button */}
+                <Favorite movieInfo={movieItems} movieId={movieId} userFrom={localStorage.getItem('userId')} isLogin={isLogin} />
+                {/* Favorite Button End */}
                 <div id="overview">
                     <span style={{float: 'right', margin: '0 1%'}}><a href={overviewURL}>자세히보기</a></span>
                     <MovieInfo movie={movieItems}/>
@@ -189,12 +207,13 @@ function MovieDetailPage(props) {
                     {creditsToggle &&
                         <CreditsInfo credits={creditsItems} director={directorsItems} />
                     }
+                    <hr />
+                    {/* Similar Movie */}
+                    <div style={{margin: '0 0 10% 0'}}>
+                        <SimilarInfo items={similarItems} />
+                    </div>
+                    {/* Similar Movie End */}
                 </div>
-                {/* Similar Movie */}
-                <div style={{margin: '0 0 10% 0'}}>
-                    <SimilarInfo items={similarItems} />
-                </div>
-                {/* Similar Movie End */}
                 {/* Comments */}
                 {(TheMovieDBReviews.length > 0) &&
                     <p><h4>TheMovieDB 리뷰</h4></p>
@@ -202,7 +221,7 @@ function MovieDetailPage(props) {
                 {TheMovieDBReviews && TheMovieDBReviews.map(item => (
                     <TheMovieDBComment review={item} />
                 ))}
-                <Comment refreshFunction={refreshFunction} commentLists={Comments} movieId={movieId} />
+                <Comment refreshFunction={refreshFunction} commentLists={Comments} movieId={movieId} isLogin={isLogin} />
             </div>
         </section>
     );

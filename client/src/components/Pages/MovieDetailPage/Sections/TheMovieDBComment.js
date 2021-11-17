@@ -4,9 +4,7 @@ import 'antd/dist/antd.css';
 
 function TheMovieDBComment(props) {
     const { review } = props;
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [buttonDisabled, setButtonDisabled] = useState(true);
+    
     const [isSeeMoreButtonActivate, setIsSeeMoreButtonActivate] = useState([]);
     
     const seeMoreReview = (event) => {
