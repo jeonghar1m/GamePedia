@@ -122,7 +122,6 @@ app.post('/api/favorite/favoriteNumber', (req, res) => {
 })
 
 app.post('/api/favorite/favorited', (req, res) => {
-  // mongoDB에서 Favorite 숫자 가져오기
   Favorite.find({ "movieId": req.body.movieId, "userFrom": req.body.userFrom })
     .exec((err, info) => {
       if(err) return res.status(400).send(err);

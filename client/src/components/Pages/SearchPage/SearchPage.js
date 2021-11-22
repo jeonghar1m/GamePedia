@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { siteTitle } from '../../Config';
-import Button from 'react-bootstrap/Button';
 import { withRouter } from 'react-router-dom';
+import './SearchPage.css';
+import { BsSearch } from "react-icons/bs";
 
 function SearchPage() {
     const [SearchValue, setSearchValue] = useState("");
@@ -21,23 +22,31 @@ function SearchPage() {
 
     return (
         <div>
-            <section className="inner">
-                <div className="container">
-                    <form method="post" onSubmit={onSubmitHandler}>
-                        <fieldset>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>검색</td>
-                                        <td><input type="text" value={SearchValue} onChange={onSearchValueHandler} required /></td>
-                                        <Button variant="secondary" onSubmit={onSubmitHandler} type="submit">확인</Button>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </fieldset>
-                    </form>
-
+            <section id="search-page">
+            <div id="main-content" style={{margin: '14% 0'}}>
+                <div id="content-name"><BsSearch /></div>
+                <form method="post" onSubmit={onSubmitHandler}>
+                <div className="input-area">
+                    <div className="element label">
+                    </div>
+                    <div className="element">
+                    <input
+                        type="text"
+                        value={SearchValue}
+                        onChange={onSearchValueHandler}
+                        required
+                    ></input>
+                    </div>
                 </div>
+                <div id="button-area">
+                    <span>
+                    <button className="search" type="submit">
+                        확인
+                    </button>
+                    </span>
+                </div>
+                </form>
+            </div>
             </section>
         </div>
     )
