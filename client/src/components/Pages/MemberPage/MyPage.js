@@ -3,18 +3,26 @@ import { siteTitle } from '../../Config';
 import { withRouter } from 'react-router-dom';
 import Gravatar from 'react-gravatar';
 import Favorite from './Sections/Favorite';
+import { useSelector } from 'react-redux';
 
 function MyPage() {
+    const user = useSelector(state => state.user);
     useEffect(() => {
-        document.title=`${window.localStorage.getItem('userNickname')}님의 마이페이지 - ${siteTitle}`;
+        document.title=`마이페이지 - ${siteTitle}`;
     }, [])
-
+    if(user.userData) {
+        return (
+            <div>
+                <section className="inner center">
+                    <div><Gravatar email={user.userData.email} size={100} /><h1>{user.userData.nickname}</h1></div>
+                    <Favorite />
+                </section>
+            </div>
+        )
+    }
     return (
         <div>
-            <section className="inner center">
-                <div><Gravatar email={window.localStorage.getItem('userEmail')} size={100} /><h1>{window.localStorage.getItem('userNickname')}</h1></div>
-                <Favorite />
-            </section>
+            Loading...
         </div>
     )
 }

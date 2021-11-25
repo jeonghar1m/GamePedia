@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LandingPage from './components/Pages/LandingPage/LandingPage';
@@ -10,48 +10,23 @@ import Register from './components/Pages/MemberPage/RegisterPage';
 import MyPage from './components/Pages/MemberPage/MyPage';
 import SearchPage from './components/Pages/SearchPage/SearchPage';
 import SearchResultsPage from './components/Pages/SearchPage/Results/SearchResults';
+import NavBar from './components/Pages/NavBar/NavBar';
 import {Route} from 'react-router-dom';
 import Auth from './hoc/auth';
-import axios from 'axios';
-import Gravatar from 'react-gravatar';
-import {auth} from './_actions/user_action';
-import {useDispatch} from 'react-redux';
-import { BsSearch } from "react-icons/bs";
+import { auth } from './_actions/user_action';
+import { useDispatch } from 'react-redux';
 
 function App(props) {
-  const logoutHandler = () => {
-    axios.get('api/users/logout');
-    window.localStorage.clear();
-  }
+  const dispatch = useDispatch();
   
-  const userId = window.localStorage.getItem('userId');
-
-  const menuRender = (userId === null) ? (
-    <span>
-      <span className="element"><a href="/login">로그인</a></span>
-      <span className="element"><a href="/register">회원가입</a></span>
-    </span>
-  ) : (
-    <span>
-      <span className="element"><a href="" onClick={logoutHandler}>로그아웃</a></span>
-      <span className="element"><a href="/mypage"><Gravatar email={window.localStorage.getItem('userEmail')} size={30} /></a></span>
-    </span>
-  )
+  useEffect(() => {
+    dispatch(auth());
+  }, [])
 
   return (
     <div className="App">
     <header>
-      <nav>
-        <div className="inner">
-          <span id="logo"><h1><a href="/">MyMovieList</a></h1></span>
-          <div id="menu">
-          </div>
-          <div id="log">
-            <a href="/search"><BsSearch /></a>
-            {menuRender}
-          </div>
-        </div>
-      </nav>
+      <NavBar />
     </header>
       <Route exact path="/" component={LandingPage}></Route>
       <Route exact path="/movie/:movieId" component={MovieDetailPage}></Route>

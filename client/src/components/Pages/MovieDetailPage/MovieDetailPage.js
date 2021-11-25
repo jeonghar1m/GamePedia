@@ -8,8 +8,7 @@ import { siteTitle, movieLang, countriesLang, movieApiBaseUrl, movieImageBaseUrl
 import axios from 'axios';
 import { Modal, Button } from 'antd';
 import SimilarInfo from './Sections/SimilarInfo';
-import { auth } from '../../../_actions/user_action';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function MovieDetailPage(props) {
     const [movieItems, setMovieItems] = useState([]);
@@ -28,7 +27,6 @@ function MovieDetailPage(props) {
     const [Comments, setComments] = useState([]);
     const [TheMovieDBReviews, setTheMovieDBReviews] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isLogin, setIsLogin] = useState(false);
         
     const movieId = props.match.params.movieId;
     const variable = {movieId: movieId};
@@ -41,11 +39,11 @@ function MovieDetailPage(props) {
 
     const overviewURL = `${props.match.params.movieId}/overview`;
     
-    const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    //const dispatch = useDispatch();
 
     useEffect(() => {
         fetchItems();
-        getIsLogin();
 
         axios.post('/api/comment/getComment', variable)
         .then(res => {
@@ -57,14 +55,6 @@ function MovieDetailPage(props) {
             }
         })
     }, []);
-
-
-    const getIsLogin = () => {
-        dispatch(auth()).then(res => {
-          if(res.payload.isAuth)  setIsLogin(true);
-          else  setIsLogin(false);
-        })
-    }
 
     const refreshFunction = (newComment) => {
         setComments(Comments.concat(newComment));
@@ -169,62 +159,68 @@ function MovieDetailPage(props) {
             </section>
         ); 
     }
-    return (
-        <section className="inner">
-            <div>
-                <div style={{width:'100%', display:'inline-block'}}>
-                    {movieWebsiteLinkRender}
-                    <h2 style={{margin: '17% 0 0 0'}}>{movieItems.title}</h2>
-                </div>
-                {/* Trailer */}
-                {isTrailerExist &&
-                    <>
-                        <Button style={{float: 'right'}} type="seconday" onClick={() => {
-                            setIsModalVisible(true);
-                        }}>
-                            트레일러
-                        </Button>
-                        <Modal title="영화 트레일러"
-                            visible={isModalVisible}
-                            width={600}
-                            onCancel={() => {
-                                setIsModalVisible(false);
-                            }}
-                            footer={null}
-                            >
-                            <iframe width="560" height="315" src={trailerItem} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </Modal>
-                    </>
-                }
-                {/* Trailer End */}
-                {/* Favorite Button */}
-                <Favorite movieInfo={movieItems} movieId={movieId} userFrom={localStorage.getItem('userId')} isLogin={isLogin} />
-                {/* Favorite Button End */}
-                <div id="overview">
-                    <span style={{float: 'right', margin: '0 1%'}}><a href={overviewURL}>자세히보기</a></span>
-                    <MovieInfo movie={movieItems}/>
-                    <hr />
-                    {creditsToggle &&
-                        <CreditsInfo credits={creditsItems} director={directorsItems} />
-                    }
-                    <hr />
-                    {/* Similar Movie */}
-                    <div style={{margin: '0 0 10% 0'}}>
-                        <SimilarInfo items={similarItems} />
+    if(user.userData) {
+        return (
+            <section className="inner">
+                <div>
+                    <div style={{width:'100%', display:'inline-block'}}>
+                        {movieWebsiteLinkRender}
+                        <h2 style={{margin: '17% 0 0 0'}}>{movieItems.title}</h2>
                     </div>
-                    {/* Similar Movie End */}
+                    {/* Trailer */}
+                    {isTrailerExist &&
+                        <>
+                            <Button style={{float: 'right'}} type="seconday" onClick={() => {
+                                setIsModalVisible(true);
+                            }}>
+                                트레일러
+                            </Button>
+                            <Modal title="영화 트레일러"
+                                visible={isModalVisible}
+                                width={600}
+                                onCancel={() => {
+                                    setIsModalVisible(false);
+                                }}
+                                footer={null}
+                                >
+                                <iframe width="560" height="315" src={trailerItem} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </Modal>
+                        </>
+                    }
+                    {/* Trailer End */}
+                    {/* Favorite Button */}
+                    <Favorite movieInfo={movieItems} movieId={movieId} userFrom={localStorage.getItem('userId')} isLogin={user.userData.isAuth} />
+                    {/* Favorite Button End */}
+                    <div id="overview">
+                        <span style={{float: 'right', margin: '0 1%'}}><a href={overviewURL}>자세히보기</a></span>
+                        <MovieInfo movie={movieItems}/>
+                        <hr />
+                        {creditsToggle &&
+                            <CreditsInfo credits={creditsItems} director={directorsItems} />
+                        }
+                        <hr />
+                        {/* Similar Movie */}
+                        <div style={{margin: '0 0 10% 0'}}>
+                            <SimilarInfo items={similarItems} />
+                        </div>
+                        {/* Similar Movie End */}
+                    </div>
+                    {/* Comments */}
+                    {(TheMovieDBReviews.length > 0) &&
+                        <p><h4>TheMovieDB 리뷰</h4></p>
+                    }
+                    {TheMovieDBReviews && TheMovieDBReviews.map(item => (
+                        <TheMovieDBComment review={item} />
+                    ))}
+                    <Comment refreshFunction={refreshFunction} commentLists={Comments} movieId={movieId} isLogin={user.userData.isAuth} />
                 </div>
-                {/* Comments */}
-                {(TheMovieDBReviews.length > 0) &&
-                    <p><h4>TheMovieDB 리뷰</h4></p>
-                }
-                {TheMovieDBReviews && TheMovieDBReviews.map(item => (
-                    <TheMovieDBComment review={item} />
-                ))}
-                <Comment refreshFunction={refreshFunction} commentLists={Comments} movieId={movieId} isLogin={isLogin} />
-            </div>
-        </section>
-    );
+            </section>
+        );
+    }
+    return (
+        <>
+        </>
+    )
 }
 
 export default MovieDetailPage;

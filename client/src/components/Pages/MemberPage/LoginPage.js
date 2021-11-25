@@ -33,8 +33,6 @@ function LoginPage() {
             .then(res => {
                 if(res.payload.loginSuccess) {
                     window.localStorage.setItem('userId', res.payload.userId);
-                    window.localStorage.setItem('userNickname', res.payload.userNickname);
-                    window.localStorage.setItem('userEmail', res.payload.userEmail);
                     window.location.replace('/');
                 } else    alert('ID 혹은 비밀번호가 맞지 않습니다.');
             })
