@@ -19,30 +19,14 @@ import {useDispatch} from 'react-redux';
 import { BsSearch } from "react-icons/bs";
 
 function App(props) {
-  const logoutHandler = () => axios.get('api/users/logout');
-  const [isLogin, setisLogin] = useState(false);
-  const [UserEmail, setUserEmail] = useState("");
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    getIsLogin();
-    getUserEmail();
-  })
-
-  const getIsLogin = () => {
-    dispatch(auth()).then(res => {
-      if(res.payload.isAuth)  setisLogin(true);
-      else  setisLogin(false);
-    })
+  const logoutHandler = () => {
+    axios.get('api/users/logout');
+    window.localStorage.clear();
   }
+  
+  const userId = window.localStorage.getItem('userId');
 
-  const getUserEmail = () => {
-    dispatch(auth()).then(res => {
-      setUserEmail(res.payload.email);
-    })
-  }
-
-  const menuRender = !isLogin ? (
+  const menuRender = (userId === null) ? (
     <span>
       <span className="element"><a href="/login">로그인</a></span>
       <span className="element"><a href="/register">회원가입</a></span>
@@ -50,7 +34,7 @@ function App(props) {
   ) : (
     <span>
       <span className="element"><a href="" onClick={logoutHandler}>로그아웃</a></span>
-      <span className="element"><a href="/mypage"><Gravatar email={UserEmail} size={30} /></a></span>
+      <span className="element"><a href="/mypage"><Gravatar email={window.localStorage.getItem('userEmail')} size={30} /></a></span>
     </span>
   )
 
