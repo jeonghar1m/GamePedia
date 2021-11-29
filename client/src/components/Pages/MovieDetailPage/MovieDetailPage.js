@@ -48,7 +48,6 @@ function MovieDetailPage(props) {
         axios.post('/api/comment/getComment', variable)
         .then(res => {
             if(res.data.success) {
-                console.log(res.data.comments);
                 setComments(res.data.comments);
             } else {
                 alert('코멘트 정보를 가져오는데 실패했습니다.');
@@ -78,7 +77,7 @@ function MovieDetailPage(props) {
                     
                     setMovieItems(data);
                     setMode("Normal");
-                    setIsLoadingMovie(false);             
+                    setIsLoadingMovie(false);
                 })
                 .catch(err => {
                     setMode("404");
