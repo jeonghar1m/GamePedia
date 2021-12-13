@@ -32,6 +32,6 @@ https://themoviedb.org (TMDB)
 * Sub - Window 10 / 11
 
 ### 개발 기간
-2021.5.27 ~ 현재
+2021.5.27 ~ 2021.11.25
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/db990cc9-3901-4f20-8855-aabe5420d6cf/deploy-status)](https://app.netlify.com/sites/harim-graduation-project/deploys)
